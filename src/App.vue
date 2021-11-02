@@ -15,7 +15,6 @@ export default {
 
 <style>
 #app {
-  font: 400 1rem Verdana, Avenir, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
