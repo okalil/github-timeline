@@ -1,7 +1,22 @@
+const {
+  blue,
+  trueGray,
+  green,
+  white,
+  warmGray,
+} = require('tailwindcss/colors');
+
 module.exports = {
   purge: { content: ['./public/**/*.html', './src/**/*.vue'] },
   darkMode: false, // or 'media' or 'class'
   theme: {
+    colors: {
+      blue,
+      gray: trueGray,
+      warmGray,
+      green,
+      white,
+    },
     extend: {
       animation: {
         slide: 'slide 0.6s',

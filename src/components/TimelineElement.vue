@@ -170,7 +170,7 @@ export default {
 }
 
 .card {
-  @apply p-3 rounded text-white relative;
+  @apply p-3 rounded text-white text-center relative flex flex-col items-center justify-center gap-2;
   width: 44%;
 
   background: var(--card-bg);
