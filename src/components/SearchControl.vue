@@ -91,25 +91,24 @@ const GET_REPOSITORIES = gql`
 <style lang="postcss" scoped>
 form {
   display: flex;
+  --button-bg: theme('colors.green.400');
 
   div {
     @apply flex my-2 mx-auto rounded;
     width: 550px;
 
     &:focus-within {
-      box-shadow: 0 0 1px 1px #41b883;
+      box-shadow: 0 0 1px 1px var(--button-bg);
     }
   }
 
   input {
-    @apply rounded-l px-2;
-    background: #534f5f;
-    color: white;
+    @apply rounded-l px-2 bg-mine-shaft-500 text-white;
 
     flex: 2;
 
     &::placeholder {
-      color: white;
+      color: theme('colors.mine-shaft.300');
     }
 
     &:focus-within {
@@ -118,9 +117,9 @@ form {
   }
 
   button {
-    @apply rounded-r px-2 py-4;
-    background: #41b883;
-    color: white;
+    @apply font-medium rounded-r px-2 py-4;
+    background: var(--button-bg);
+    color: theme('colors.mine-shaft.600');
     flex: 1;
   }
 }

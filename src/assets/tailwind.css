@@ -6,6 +6,7 @@
 
 body {
   /* background: #010409; */
-  background: #333333;
+  /* background: #333333; */
+  @apply bg-mine-shaft-700;
   font: 400 1rem 'Poppins', Verdana, sans-serif;
 }

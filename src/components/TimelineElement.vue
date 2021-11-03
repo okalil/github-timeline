@@ -1,7 +1,9 @@
 <template>
   <div class="element-container">
     <span class="icon intersection">
-      <img src="@/assets/github.svg" alt="Github" />
+      <Github />
+      <!-- <GithubOutlined /> -->
+      <!-- <img src="@/assets/github.svg" alt="Github" /> -->
     </span>
     <section class="card intersection">
       <span class="arrow"></span>
@@ -27,7 +29,9 @@
           />
           {{ topLanguage.name }}
         </span>
-        <span v-if="repo.stargazerCount">sg: {{ repo.stargazerCount }}</span>
+        <span v-if="repo.stargazerCount" class="flex items-center gap-1">
+          <Star />{{ repo.stargazerCount }}
+        </span>
         <span>Atualizado {{ elapsedTimeSinceUpdated }}</span>
       </div>
       <a
@@ -43,6 +47,12 @@
 </template>
 
 <script>
+import format from 'date-fns/format';
+import formatDistanceToNowStrict from 'date-fns/formatDistanceToNowStrict';
+import pt from 'date-fns/locale/pt-BR';
+import Github from 'vue-material-design-icons/Github.vue';
+import Star from 'vue-material-design-icons/StarOutline.vue';
+
 const observer = new IntersectionObserver(
   entries =>
     entries.forEach(entry => {
@@ -52,21 +62,15 @@ const observer = new IntersectionObserver(
       )
         entry.target.classList.add('in-viewport');
     }),
-  {
-    // root: null,
-    // rootMargin: '0px',
-    threshold: 0.25,
-  }
+  { threshold: 0.25 }
 );
-
-import format from 'date-fns/format';
-import formatDistanceToNowStrict from 'date-fns/formatDistanceToNowStrict';
-import pt from 'date-fns/locale/pt-BR';
 
 export default {
   name: 'TimelineElement',
-  props: {
-    repo: Object,
+  props: ['repo'],
+  components: {
+    Github,
+    Star,
   },
   mounted() {
     const elements = document.querySelectorAll('.intersection');
@@ -89,6 +93,7 @@ export default {
     },
     topLanguage() {
       const lang = this.repo.languages.nodes[0];
+
       if (!lang) {
         return { color: '', name: '' };
       }
@@ -108,7 +113,7 @@ export default {
   --icon-size: 3rem;
   --arrow-size: 1rem;
   --date-position-x: calc(50% + var(--icon-size) / 2);
-  --card-bg: #161b22;
+  --card-bg: theme('colors.mine-shaft.500');
 
   &:nth-child(2n + 1) {
     .card {
@@ -150,18 +155,18 @@ export default {
 }
 
 .icon {
-  @apply absolute top-0 rounded-full bg-gray-700;
+  @apply absolute top-0 rounded-full bg-white;
+  @apply flex items-center justify-center;
 
   left: calc(50% - var(--icon-size) / 2);
   width: var(--icon-size);
   height: var(--icon-size);
-  box-shadow: inset 0 0 3px 3px var(--card-bg);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  border: 5px solid var(--card-bg);
 
-  img {
-    width: calc(var(--icon-size) * 2 / 3);
+  svg {
+    width: calc(var(--icon-size) * 3 / 4);
+    height: calc(var(--icon-size) * 3 / 4);
+    color: theme('colors.gray.800');
   }
 
   &.in-viewport {
@@ -174,7 +179,7 @@ export default {
   width: 44%;
 
   background: var(--card-bg);
-  color: #848484;
+  color: theme('colors.mine-shaft.300');
   border: 1px solid #2b3138;
 
   &.in-viewport {

@@ -13,9 +13,21 @@ module.exports = {
     colors: {
       blue,
       gray: trueGray,
-      warmGray,
+      'warm-gray': warmGray,
       green,
       white,
+      'mine-shaft': {
+        '50': '#f5f5f5',
+        '100': '#eaeaeb',
+        '200': '#cbcccc',
+        '300': '#acadae',
+        '400': '#6e6f71',
+        '500': '#303134',
+        '600': '#2b2c2f',
+        '700': '#202124',
+        '800': '#1d1d1f',
+        '900': '#181819',
+      },
     },
     extend: {
       animation: {

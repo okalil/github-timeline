@@ -44,7 +44,7 @@ export default {
   top: 0;
   left: 50%;
   height: 100%;
-  width: 4px;
-  background: #161b22;
+  width: 5px;
+  background: theme('colors.mine-shaft.500');
 }
 </style>
