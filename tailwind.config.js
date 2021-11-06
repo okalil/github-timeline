@@ -1,10 +1,4 @@
-const {
-  blue,
-  trueGray,
-  green,
-  white,
-  warmGray,
-} = require('tailwindcss/colors');
+const { blue, green, white, red } = require('tailwindcss/colors');
 
 module.exports = {
   purge: { content: ['./public/**/*.html', './src/**/*.vue'] },
@@ -12,8 +6,7 @@ module.exports = {
   theme: {
     colors: {
       blue,
-      gray: trueGray,
-      'warm-gray': warmGray,
+      red,
       green,
       white,
       'mine-shaft': {

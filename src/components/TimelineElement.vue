@@ -2,12 +2,10 @@
   <div class="element-container">
     <span class="icon intersection">
       <Github />
-      <!-- <GithubOutlined /> -->
-      <!-- <img src="@/assets/github.svg" alt="Github" /> -->
     </span>
     <section class="card intersection">
       <span class="arrow"></span>
-      <span class="mask"></span>
+      <!-- <span class="mask"></span> -->
       <h2 class="font-semibold text-xl" style="color: #C7CFD1">
         {{ repo.name }}
       </h2>
@@ -15,13 +13,13 @@
         <span
           v-for="node in repo.repositoryTopics.nodes"
           :key="node.id"
-          class="border border-blue-300 border-solid rounded p-1 mr-1"
+          class="topic"
         >
           {{ node.topic.name }}
         </span>
       </div>
       <div>{{ repo.description }}</div>
-      <div class="flex justify-center gap-4">
+      <div class="flex justify-center flex-wrap gap-x-4">
         <span class="flex items-center" :v-if="repo.id">
           <span
             class="w-2 h-2 rounded-full mr-1"
@@ -34,15 +32,17 @@
         </span>
         <span>Atualizado {{ elapsedTimeSinceUpdated }}</span>
       </div>
-      <a
-        class="text-blue-500 hover:underline"
-        :href="'https://github.com' + repo.resourcePath"
-        target="_blank"
-      >
-        Acessar repositório
-      </a>
+      <div class="flex gap-4">
+        <p class="date">{{ createdAt }}</p>
+        <a
+          class="text-blue-500 hover:underline"
+          :href="'https://github.com' + repo.resourcePath"
+          target="_blank"
+        >
+          Acessar repositório
+        </a>
+      </div>
     </section>
-    <p class="date">{{ createdAt }}</p>
   </div>
 </template>
 
@@ -112,39 +112,8 @@ export default {
 
   --icon-size: 3rem;
   --arrow-size: 1rem;
-  --date-position-x: calc(50% + var(--icon-size) / 2);
+  --date-position-x: 120%;
   --card-bg: theme('colors.mine-shaft.500');
-
-  &:nth-child(2n + 1) {
-    .card {
-      @apply mr-auto;
-    }
-    .arrow {
-      right: -5px;
-    }
-    .mask {
-      right: 0;
-    }
-    .date {
-      left: var(--date-position-x);
-      margin-left: 1rem;
-    }
-  }
-  &:nth-child(2n) {
-    .card {
-      @apply ml-auto;
-    }
-    .arrow {
-      left: -5px;
-    }
-    .mask {
-      left: 0;
-    }
-    .date {
-      right: var(--date-position-x);
-      margin-right: 1rem;
-    }
-  }
 }
 
 .intersection {
@@ -155,18 +124,18 @@ export default {
 }
 
 .icon {
-  @apply absolute top-0 rounded-full bg-white;
+  @apply absolute top-0 rounded-full bg-mine-shaft-100;
   @apply flex items-center justify-center;
 
-  left: calc(50% - var(--icon-size) / 2);
   width: var(--icon-size);
   height: var(--icon-size);
   border: 5px solid var(--card-bg);
+  right: calc(100% - var(--icon-size) / 2);
 
   svg {
     width: calc(var(--icon-size) * 3 / 4);
     height: calc(var(--icon-size) * 3 / 4);
-    color: theme('colors.gray.800');
+    color: theme('colors.mine-shaft.800');
   }
 
   &.in-viewport {
@@ -175,9 +144,9 @@ export default {
 }
 
 .card {
-  @apply p-3 rounded text-white text-center relative flex flex-col items-center justify-center gap-2;
-  width: 44%;
-
+  @apply py-3 px-0 rounded text-white relative flex flex-col justify-center gap-2;
+  @apply ml-auto items-center;
+  width: 90%;
   background: var(--card-bg);
   color: theme('colors.mine-shaft.300');
   border: 1px solid #2b3138;
@@ -194,6 +163,7 @@ export default {
     height: var(--arrow-size);
     width: var(--arrow-size);
     top: calc(var(--icon-size) / 2 - var(--arrow-size) / 2);
+    left: -5px;
   }
 
   .mask {
@@ -205,11 +175,55 @@ export default {
     height: var(--mask-size);
     width: var(--mask-size);
     top: calc(var(--icon-size) / 2 - var(--arrow-size) / 2 - 3px);
+    left: 0;
   }
 }
 
-.date {
-  @apply absolute top-0 flex items-center;
-  height: var(--icon-size);
+.topic {
+  @apply rounded-2xl py-1 px-2 mr-1 font-medium text-blue-400 bg-blue-900;
+}
+
+@media screen(md) {
+  .element-container {
+    &:nth-child(2n + 1) {
+      .card {
+        @apply mr-auto ml-0;
+        .arrow {
+          right: -5px;
+          left: auto;
+        }
+      }
+      .date {
+        left: var(--date-position-x);
+        margin-left: 1rem;
+      }
+    }
+    &:nth-child(2n) {
+      .card {
+        @apply ml-auto;
+      }
+      .arrow {
+        left: -5px;
+      }
+      .mask {
+        left: 0;
+      }
+      .date {
+        right: var(--date-position-x);
+        margin-right: 1rem;
+      }
+    }
+  }
+  .icon {
+    left: calc(50% - var(--icon-size) / 2);
+  }
+  .card {
+    @apply text-center;
+    width: 44%;
+  }
+  .date {
+    @apply absolute top-0 flex items-center;
+    height: var(--icon-size);
+  }
 }
 </style>

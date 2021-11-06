@@ -1,43 +1,56 @@
 <template>
   <form @submit.prevent="onSubmit">
-    <div>
+    <div :class="!error ? 'focused' : ''">
       <input
         spellcheck="false"
         type="text"
         placeholder="Insira o nome de usuário Github"
         v-model="username"
+        :class="!!error ? 'border border-red-500' : ''"
       />
       <button type="submit">Gerar Timeline</button>
+      <span v-if="!!error" class="warning text-red-500"
+        >O nome de usuário não é válido.</span
+      >
+      <span v-if="empty" class="warning"
+        >O usuário inserido ainda não possui repositórios públicos.</span
+      >
     </div>
   </form>
 </template>
 
 <script>
 import gql from 'graphql-tag';
-import store, { mutations } from '../store';
+import { mutations } from '../store';
 
 const { setLogin, setUser, setLoading } = mutations;
 
 export default {
   name: 'SearchControl',
   data() {
-    return { username: '' };
+    return { username: '', error: null, empty: false };
   },
   methods: {
     onSubmit() {
-      setLoading(true);
+      this.reset();
       setLogin(this.username);
-      setUser(null);
-
       this.queryRepositories(this.username.trim())
         .then(r => {
           setUser(r.data.user);
+          if (!r.data.user.repositories.nodes.length) {
+            this.empty = true;
+          }
         })
-        .catch(error => console.log('Error', error))
+        .catch(error => (this.error = error))
         .finally(() => {
           setLoading(false);
-          console.log('store', store);
         });
+    },
+    reset() {
+      setLoading(true);
+      setUser(null);
+      this.error = null;
+      this.empty = false;
     },
     queryRepositories(login) {
       return this.$apollo.query({
@@ -90,21 +103,21 @@ const GET_REPOSITORIES = gql`
 
 <style lang="postcss" scoped>
 form {
-  display: flex;
+  @apply flex p-4;
   --button-bg: theme('colors.green.400');
 
   div {
-    @apply flex my-2 mx-auto rounded;
-    width: 550px;
+    @apply flex mx-auto rounded relative;
+    width: min(550px, 100%);
 
-    &:focus-within {
+    &.focused:focus-within {
       box-shadow: 0 0 1px 1px var(--button-bg);
     }
   }
 
   input {
-    @apply rounded-l px-2 bg-mine-shaft-500 text-white;
-
+    @apply rounded sm:rounded-r-none bg-mine-shaft-500 text-white;
+    @apply px-2 py-2;
     flex: 2;
 
     &::placeholder {
@@ -117,10 +130,21 @@ form {
   }
 
   button {
-    @apply font-medium rounded-r px-2 py-4;
+    @apply font-medium rounded-r px-2 py-4 hidden sm:block;
     background: var(--button-bg);
     color: theme('colors.mine-shaft.600');
     flex: 1;
+  }
+
+  .warning {
+    @apply absolute -bottom-3/4 opacity-90;
+  }
+
+  .shadow-red {
+    box-shadow: 0 0 1px 1px theme('colors.red.500');
+  }
+  .shadow-green {
+    box-shadow: 0 0 1px 1px var(--button-bg);
   }
 }
 </style>

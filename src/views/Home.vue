@@ -2,7 +2,7 @@
   <div>
     <SearchControl />
     <div v-if="loading">
-      Loading...
+      <Loader />
     </div>
     <div v-else-if="user">
       <div class="timeline">
@@ -20,12 +20,13 @@
 import store from '../store';
 import TimelineElement from '../components/TimelineElement.vue';
 import SearchControl from '../components/SearchControl.vue';
+import Loader from '../components/Loader.vue';
 
 const { loading, user } = store;
 
 export default {
   name: 'Home',
-  components: { TimelineElement, SearchControl },
+  components: { TimelineElement, SearchControl, Loader },
   computed: {
     loading,
     user,
@@ -42,9 +43,10 @@ export default {
   content: '';
   position: absolute;
   top: 0;
-  left: 50%;
   height: 100%;
   width: 5px;
   background: theme('colors.mine-shaft.500');
+
+  @apply left-0 md:left-1/2;
 }
 </style>
