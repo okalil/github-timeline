@@ -5,11 +5,13 @@
     </span>
     <section class="card intersection">
       <span class="arrow"></span>
-      <!-- <span class="mask"></span> -->
       <h2 class="font-semibold text-xl" style="color: #C7CFD1">
         {{ repo.name }}
       </h2>
-      <div v-if="repo.repositoryTopics">
+      <div
+        v-if="repo.repositoryTopics.nodes.length"
+        class="flex flex-wrap justify-center gap-x-1 gap-y-1"
+      >
         <span
           v-for="node in repo.repositoryTopics.nodes"
           :key="node.id"
@@ -18,7 +20,7 @@
           {{ node.topic.name }}
         </span>
       </div>
-      <div>{{ repo.description }}</div>
+      <div v-if="repo.description">{{ repo.description }}</div>
       <div class="flex justify-center flex-wrap gap-x-4">
         <span class="flex items-center" :v-if="repo.id">
           <span
@@ -30,7 +32,7 @@
         <span v-if="repo.stargazerCount" class="flex items-center gap-1">
           <Star />{{ repo.stargazerCount }}
         </span>
-        <span>Atualizado {{ elapsedTimeSinceUpdated }}</span>
+        <span>Atualizado {{ updatedAt }}</span>
       </div>
       <div class="flex gap-4">
         <p class="date">{{ createdAt }}</p>
@@ -47,8 +49,10 @@
 </template>
 
 <script>
-import format from 'date-fns/format';
+import format from 'date-fns/format/index';
 import formatDistanceToNowStrict from 'date-fns/formatDistanceToNowStrict';
+import getYear from 'date-fns/fp/getYear/index';
+import getMonth from 'date-fns/fp/getMonth/index';
 import pt from 'date-fns/locale/pt-BR';
 import Github from 'vue-material-design-icons/Github.vue';
 import Star from 'vue-material-design-icons/StarOutline.vue';
@@ -81,10 +85,14 @@ export default {
       const date = new Date(this.repo.createdAt);
       return format(date, 'dd/MM/yyyy', { locale: pt });
     },
-    elapsedTimeSinceUpdated() {
+    updatedAt() {
       const date = new Date(this.repo.updatedAt);
+      const now = Date.now();
 
-      if (Date.now() - date > 3600000 * 24 * 30)
+      if (getYear(date) !== getYear(now))
+        return `em ${format(date, 'd MMM yyyy', { locale: pt })}`;
+
+      if (getMonth(date) !== getMonth(now))
         return `em ${format(date, 'd MMM', { locale: pt })}`;
 
       return `há ${formatDistanceToNowStrict(date, {
@@ -144,7 +152,7 @@ export default {
 }
 
 .card {
-  @apply py-3 px-0 rounded text-white relative flex flex-col justify-center gap-2;
+  @apply py-3 px-2 rounded text-white relative flex flex-col justify-center gap-2;
   @apply ml-auto items-center;
   width: 90%;
   background: var(--card-bg);
@@ -164,23 +172,14 @@ export default {
     width: var(--arrow-size);
     top: calc(var(--icon-size) / 2 - var(--arrow-size) / 2);
     left: -5px;
-  }
-
-  .mask {
-    @apply absolute;
-
-    --mask-size: calc(var(--arrow-size) + 6px);
-
-    background: var(--card-bg);
-    height: var(--mask-size);
-    width: var(--mask-size);
-    top: calc(var(--icon-size) / 2 - var(--arrow-size) / 2 - 3px);
-    left: 0;
+    z-index: -1;
   }
 }
 
 .topic {
   @apply rounded-2xl py-1 px-2 mr-1 font-medium text-blue-400 bg-blue-900;
+  @apply whitespace-nowrap;
+  filter: brightness(0.9);
 }
 
 @media screen(md) {
@@ -204,9 +203,6 @@ export default {
       }
       .arrow {
         left: -5px;
-      }
-      .mask {
-        left: 0;
       }
       .date {
         right: var(--date-position-x);

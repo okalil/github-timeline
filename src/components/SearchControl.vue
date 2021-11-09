@@ -137,7 +137,8 @@ form {
   }
 
   .warning {
-    @apply absolute -bottom-3/4 opacity-90;
+    @apply absolute opacity-90;
+    top: calc(100% + 16px);
   }
 
   .shadow-red {

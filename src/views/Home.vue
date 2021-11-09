@@ -36,7 +36,8 @@ export default {
 
 <style lang="postcss" scoped>
 .timeline {
-  @apply h-full max-w-5xl w-11/12 relative mx-auto;
+  @apply h-full relative mx-auto;
+  width: min(89%, 1024px);
 }
 
 .timeline::before {
