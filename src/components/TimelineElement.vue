@@ -174,6 +174,10 @@ export default {
     left: -5px;
     z-index: -1;
   }
+
+  .date {
+    @apply text-mine-shaft-200;
+  }
 }
 
 .topic {

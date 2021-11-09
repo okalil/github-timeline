@@ -1,5 +1,8 @@
 <template>
   <div>
+    <div v-if="!username" class="title">
+      Veja a timeline dos seus repositórios
+    </div>
     <SearchControl />
     <div v-if="loading">
       <Loader />
@@ -22,7 +25,7 @@ import TimelineElement from '../components/TimelineElement.vue';
 import SearchControl from '../components/SearchControl.vue';
 import Loader from '../components/Loader.vue';
 
-const { loading, user } = store;
+const { loading, user, username } = store;
 
 export default {
   name: 'Home',
@@ -30,11 +33,16 @@ export default {
   computed: {
     loading,
     user,
+    username,
   },
 };
 </script>
 
 <style lang="postcss" scoped>
+.title {
+  @apply px-4 mt-16 mb-4 mx-auto w-full max-w-xl;
+  @apply font-bold text-3xl text-mine-shaft-100 text-left;
+}
 .timeline {
   @apply h-full relative mx-auto;
   width: min(89%, 1024px);
