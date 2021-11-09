@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import gql from 'graphql-tag';
+import GET_REPOSITORIES from '../graphql/GetRepositories';
 import { mutations } from '../store';
 
 const { setLogin, setUser, setLoading } = mutations;
@@ -62,43 +62,6 @@ export default {
     },
   },
 };
-const GET_REPOSITORIES = gql`
-  query getRepositories($login: String!) {
-    user(login: $login) {
-      id
-      name
-      repositories(
-        first: 10
-        privacy: PUBLIC
-        orderBy: { field: CREATED_AT, direction: DESC }
-      ) {
-        nodes {
-          id
-          name
-          createdAt
-          updatedAt
-          description
-          resourcePath
-          repositoryTopics(first: 5) {
-            nodes {
-              id
-              topic {
-                name
-              }
-            }
-          }
-          languages(first: 1, orderBy: { direction: DESC, field: SIZE }) {
-            nodes {
-              color
-              name
-            }
-          }
-          stargazerCount
-        }
-      }
-    }
-  }
-`;
 </script>
 
 <style lang="postcss" scoped>

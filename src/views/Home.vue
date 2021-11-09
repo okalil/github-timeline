@@ -15,12 +15,22 @@
           :repo="repo"
         />
       </div>
+      <button
+        v-if="user.repositories.totalCount > user.repositories.nodes.length"
+        type="button"
+        class="more"
+        @click="showMore"
+      >
+        {{ loadingMore ? 'Carregando...' : 'Mostrar mais repositórios' }}
+      </button>
     </div>
   </div>
 </template>
 
 <script>
-import store from '../store';
+import store, { mutations } from '../store';
+import GET_REPOSITORIES from '../graphql/GetRepositories';
+
 import TimelineElement from '../components/TimelineElement.vue';
 import SearchControl from '../components/SearchControl.vue';
 import Loader from '../components/Loader.vue';
@@ -30,10 +40,40 @@ const { loading, user, username } = store;
 export default {
   name: 'Home',
   components: { TimelineElement, SearchControl, Loader },
+  data() {
+    return {
+      loadingMore: false,
+    };
+  },
   computed: {
     loading,
     user,
     username,
+  },
+  methods: {
+    showMore() {
+      this.loadingMore = true;
+      this.$apollo
+        .query({
+          query: GET_REPOSITORIES,
+          variables: {
+            login: this.username,
+            after: this.user.repositories.pageInfo.endCursor,
+          },
+        })
+        .then(r => {
+          const { repositories } = r.data.user;
+          mutations.setUser({
+            ...this.user,
+            repositories: {
+              ...repositories,
+              nodes: [...this.user.repositories.nodes, ...repositories.nodes],
+            },
+          });
+        })
+        .catch(err => console.log('err', err))
+        .finally(() => (this.loadingMore = false));
+    },
   },
 };
 </script>
@@ -57,5 +97,12 @@ export default {
   background: theme('colors.mine-shaft.500');
 
   @apply left-0 md:left-1/2;
+}
+
+.more {
+  @apply bg-mine-shaft-700 border border-mine-shaft-400 text-blue-500 font-medium;
+  @apply p-2 rounded my-2 mx-auto block w-full;
+  @apply hover:bg-mine-shaft-600;
+  width: min(89%, 1024px);
 }
 </style>
