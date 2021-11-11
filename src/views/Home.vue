@@ -4,10 +4,10 @@
       Veja a timeline dos seus repositórios
     </div>
     <SearchControl />
-    <div v-if="loading">
+    <template v-if="loading">
       <Loader />
-    </div>
-    <div v-else-if="user">
+    </template>
+    <template v-else-if="user">
       <div class="timeline">
         <TimelineElement
           v-for="repo in user.repositories.nodes"
@@ -23,7 +23,8 @@
       >
         {{ loadingMore ? 'Carregando...' : 'Mostrar mais repositórios' }}
       </button>
-    </div>
+    </template>
+    <GithubLink />
   </div>
 </template>
 
@@ -34,12 +35,18 @@ import GET_REPOSITORIES from '../graphql/GetRepositories';
 import TimelineElement from '../components/TimelineElement.vue';
 import SearchControl from '../components/SearchControl.vue';
 import Loader from '../components/Loader.vue';
+import GithubLink from '../components/GithubLink.vue';
 
 const { loading, user, username } = store;
 
 export default {
   name: 'Home',
-  components: { TimelineElement, SearchControl, Loader },
+  components: {
+    TimelineElement,
+    SearchControl,
+    Loader,
+    GithubLink,
+  },
   data() {
     return {
       loadingMore: false,
