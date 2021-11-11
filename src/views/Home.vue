@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="!username" class="title">
+    <div v-if="!username" :class="$style.title">
       Veja a timeline dos seus repositórios
     </div>
     <SearchControl />
@@ -8,7 +8,7 @@
       <Loader />
     </template>
     <template v-else-if="user">
-      <div class="timeline">
+      <div :class="$style.timeline">
         <TimelineElement
           v-for="repo in user.repositories.nodes"
           :key="repo.id"
@@ -18,7 +18,7 @@
       <button
         v-if="user.repositories.totalCount > user.repositories.nodes.length"
         type="button"
-        class="more"
+        :class="$style.more"
         @click="showMore"
       >
         {{ loadingMore ? 'Carregando...' : 'Mostrar mais repositórios' }}
@@ -32,7 +32,7 @@
 import store, { mutations } from '../store';
 import GET_REPOSITORIES from '../graphql/GetRepositories';
 
-import TimelineElement from '../components/TimelineElement.vue';
+import TimelineElement from '../components/TimelineElement';
 import SearchControl from '../components/SearchControl.vue';
 import Loader from '../components/Loader.vue';
 import GithubLink from '../components/GithubLink.vue';
@@ -85,7 +85,7 @@ export default {
 };
 </script>
 
-<style lang="postcss" scoped>
+<style lang="postcss" module>
 .title {
   @apply px-4 mt-16 mb-4 mx-auto w-full max-w-xl;
   @apply font-bold text-3xl text-mine-shaft-100 text-left;
